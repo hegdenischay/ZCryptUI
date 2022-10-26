@@ -111,7 +111,7 @@ class Widget(QWidget):
 
     def submitRSA(self):
         print("In SubmitInRSA, currentBuffer:", self.currentBuffer)
-        funcDict = {i : f"RSA.RSA{i+1}.RSA{i+1}"}
+        funcDict = {i : f"RSA.RSA{i+1}.RSA{i+1}" for i in range(9)}
         try:
             currentIndex = self.RSA_Combo.currentIndex()
             variable_list = [codecs.decode(i[2].text(), 'hex') for i in self.currentBuffer]
