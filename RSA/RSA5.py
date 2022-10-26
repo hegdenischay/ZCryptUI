@@ -18,5 +18,5 @@ def RSA5(c1, c2, c3, n1, n2, n3):
     for n,c in zip(N, C):
         assert a % n == c
     m = gmpy.root(a,e)[0]
-    decrypted = convert(m)
+    decrypted = Convert(m)
     return decrypted

@@ -13,5 +13,5 @@ def RSA1(c, n, e)
     phi = (p-1)*(q-1)
     d = modinv(e,phi)
     decrypt = pow(c,d,n)
-    decrypted = convert(decrypt)
+    decrypted = Convert(decrypt)
     return decrypted

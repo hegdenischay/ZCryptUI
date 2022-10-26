@@ -5,7 +5,8 @@ import sys
 import codecs
 import importlib
 
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea, QMainWindow, QAction
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QFile
 from PyQt5 import uic
 
@@ -33,24 +34,51 @@ class ScrollLabel(QScrollArea):
         # setting text to the label
         self.label.setText(text)
 
-class Widget(QWidget):
+class Widget(QMainWindow):
     def __init__(self, parent=None):
         # default display
         super().__init__(parent)
         uic.loadUi('form.ui', self)
+        mainMenu = self.menuBar()
+        fileMenu = mainMenu.addMenu('File')
+        helpMenu = mainMenu.addMenu('Help')
+        exitButton = QAction(QIcon('exit24.png'), 'Exit', self)
+        exitButton.setShortcut('Ctrl+Q')
+        exitButton.setStatusTip('Exit application')
+        exitButton.triggered.connect(self.close)
+        fileMenu.addAction(exitButton)
+        aboutButton = QAction(QIcon('exit24.png'), 'About', self)
+        aboutButton.setStatusTip('About application')
+        aboutButton.triggered.connect(self.showAbout)
+        helpMenu.addAction(aboutButton)
         RSA_Items = ["(c,n,e)", "(c,p,q,e)", "(c,n,e,{p or q})", "(c,n,d)", "Hasted Broadcast Attack", "Small Exponent(\"e\") Attack", "Chinese Remainder Theorem", "Fermat Factorization"]
         XOR_Items = ["Single Key", "Repeating Key"]
         self.listOfParams = []
         self.currentBuffer=[]
         self.RSA_Combo.addItems(RSA_Items)
         self.XOR_Combo.addItems(XOR_Items)
+        self.tabWidget.currentChanged.connect(self.tabChanges)
+        self.workOnRSA()
         self.RSA_Combo.currentIndexChanged.connect(self.workOnRSA)
         self.XOR_Combo.currentIndexChanged.connect(self.workOnXOR)
         self.NextRSA.clicked.connect(self.submitRSA)
         self.NextXOR.clicked.connect(self.submitXOR)
 
+    def tabChanges(self, i):
+        if i == 0:
+            self.workOnRSA()
+        elif i == 1:
+            self.workOnXOR()
+        else:
+            print("Exception")
+
+    def showAbout(self):
+        aboutBox = QMessageBox(self)
+        aboutBox.setWindowTitle("About application")
+        aboutBox.setText("ZCrypt in PyQt5.\nConsole version coded by stoic3r, GUI by @thatloststudent")
+        aboutBox.show()
+
     def workOnRSA(self):
-        print("In WorkOnRSA")
         try:
             self.aboutLabelRSA.setParent(None)
             currentIndex = self.RSA_Combo.currentIndex()
@@ -80,7 +108,6 @@ class Widget(QWidget):
         self.currentBuffer = []
 
     def workOnXOR(self):
-        print("In WorkOnXOR")
         try:
             self.aboutLabelXOR.setParent(None)
             currentIndex = self.XOR_Combo.currentIndex()
@@ -94,9 +121,7 @@ class Widget(QWidget):
     def addInputsOnIndex(self, widgets, parent):
         # Expecting labels for QLabels
         listOfInputs = []
-        print("In addWidgetsOnIndex")
         try:
-            print(widgets, parent)
             for i in widgets:
                 layout = QHBoxLayout()
                 label = QLabel(i)
@@ -110,11 +135,10 @@ class Widget(QWidget):
         return listOfInputs
 
     def submitRSA(self):
-        print("In SubmitInRSA, currentBuffer:", self.currentBuffer)
         funcDict = {i : f"RSA.RSA{i+1}.RSA{i+1}" for i in range(9)}
         try:
             currentIndex = self.RSA_Combo.currentIndex()
-            variable_list = [int(i[2].text(), '10') for i in self.currentBuffer]
+            variable_list = [int(i[2].text())  for i in self.currentBuffer]
             mod_name, func_name = funcDict[currentIndex].rsplit('.',1)
             mod = importlib.import_module(mod_name)
             func = getattr(mod, func_name)
@@ -127,7 +151,6 @@ class Widget(QWidget):
             print(e)
 
     def submitXOR(self):
-        print("In SubmitXOR, currentBuffer:", self.currentBuffer)
         funcDict = {0: "XOR.bruteforce.bruteforce",
                     1: "XOR.repeating_key.repeating_key"}
         try:

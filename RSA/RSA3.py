@@ -5,5 +5,5 @@ def RSA3(c, n, e, p):
     phi = (p-1)*(q-1)
     d = modinv(e,phi)
     decrypt = pow(c,d,n)
-    decrypted = convert(decrypt)
+    decrypted = Convert(decrypt)
     return decrypted
