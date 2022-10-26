@@ -54,14 +54,14 @@ class Widget(QWidget):
         try:
             self.aboutLabelRSA.setParent(None)
             currentIndex = self.RSA_Combo.currentIndex()
-            inputs = {0: ["Ciphertext (in hex)", "N (in hex)", "E (in hex)"],
-                      1: ["Ciphertext (in hex)", "P (in hex)", "Q (in hex)", "E (in hex)"],
-                      2: ["Ciphertext (in hex)", "N (in hex)", "E (in hex)", "P (in hex)"],
-                      3: ["Ciphertext (in hex)", "N (in hex)", "D (in hex)"],
-                      4: ["C1 (in hex)", "C2 (in hex)", "C3 (in hex)", "N1 (in hex)", "N2 (in hex)", "N3 (in hex)"],
-                      5: ["C (in hex)", "E (in hex)"],
-                      6: ["C (in hex)", "P (in hex)", "Q (in hex)", "DP (in hex)", "DQ (in hex)"],
-                      7: ["C (in hex)", "N (in hex)", "E (in hex)"]
+            inputs = {0: ["Ciphertext (in decimal)", "N (in decimal)", "E (in decimal)"],
+                      1: ["Ciphertext (in decimal)", "P (in decimal)", "Q (in decimal)", "E (in decimal)"],
+                      2: ["Ciphertext (in decimal)", "N (in decimal)", "E (in decimal)", "P (in decimal)"],
+                      3: ["Ciphertext (in decimal)", "N (in decimal)", "D (in decimal)"],
+                      4: ["C1 (in decimal)", "C2 (in decimal)", "C3 (in decimal)", "N1 (in decimal)", "N2 (in decimal)", "N3 (in decimal)"],
+                      5: ["C (in decimal)", "E (in decimal)"],
+                      6: ["C (in decimal)", "P (in decimal)", "Q (in decimal)", "DP (in decimal)", "DQ (in decimal)"],
+                      7: ["C (in decimal)", "N (in decimal)", "E (in decimal)"]
                       }
             self.clearLayout(self.verticalLayout_4)
             self.currentBuffer.extend(self.addInputsOnIndex(inputs[currentIndex], self.verticalLayout_4))
@@ -114,7 +114,7 @@ class Widget(QWidget):
         funcDict = {i : f"RSA.RSA{i+1}.RSA{i+1}" for i in range(9)}
         try:
             currentIndex = self.RSA_Combo.currentIndex()
-            variable_list = [codecs.decode(i[2].text(), 'hex') for i in self.currentBuffer]
+            variable_list = [int(i[2].text(), '10') for i in self.currentBuffer]
             mod_name, func_name = funcDict[currentIndex].rsplit('.',1)
             mod = importlib.import_module(mod_name)
             func = getattr(mod, func_name)
