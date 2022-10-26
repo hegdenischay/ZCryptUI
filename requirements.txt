@@ -1,0 +1,9 @@
+pycryptodome
+Crypto
+gmpy2
+gmpy
+SymPy
+requests
+future
+pwntools
+PyQt5
