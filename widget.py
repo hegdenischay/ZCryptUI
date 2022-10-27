@@ -39,18 +39,10 @@ class Widget(QMainWindow):
         # default display
         super().__init__(parent)
         uic.loadUi('form.ui', self)
-        mainMenu = self.menuBar()
-        fileMenu = mainMenu.addMenu('File')
-        helpMenu = mainMenu.addMenu('Help')
-        exitButton = QAction(QIcon('exit24.png'), 'Exit', self)
-        exitButton.setShortcut('Ctrl+Q')
-        exitButton.setStatusTip('Exit application')
-        exitButton.triggered.connect(self.close)
-        fileMenu.addAction(exitButton)
         aboutButton = QAction(QIcon('exit24.png'), 'About', self)
         aboutButton.setStatusTip('About application')
         aboutButton.triggered.connect(self.showAbout)
-        helpMenu.addAction(aboutButton)
+        self.menu_About.addAction(aboutButton)
         RSA_Items = ["(c,n,e)", "(c,p,q,e)", "(c,n,e,{p or q})", "(c,n,d)", "Hasted Broadcast Attack", "Small Exponent(\"e\") Attack", "Chinese Remainder Theorem", "Fermat Factorization"]
         XOR_Items = ["Single Key", "Repeating Key"]
         self.listOfParams = []
@@ -78,6 +70,12 @@ class Widget(QMainWindow):
         aboutBox.setText("ZCrypt in PyQt5.\nConsole version coded by stoic3r, GUI by @thatloststudent")
         aboutBox.show()
 
+    def showWarningBox(self, error):
+        warningBox = QMessageBox(self)
+        warningBox.setWindowTitle("Error!")
+        warningbox.setText(error)
+        warningBox.show()
+
     def workOnRSA(self):
         try:
             self.aboutLabelRSA.setParent(None)
@@ -94,7 +92,7 @@ class Widget(QMainWindow):
             self.clearLayout(self.verticalLayout_4)
             self.currentBuffer.extend(self.addInputsOnIndex(inputs[currentIndex], self.verticalLayout_4))
         except Exception as e:
-            print(e)
+            self.showWarningBox(e)
 
     def clearLayout(self, layout):
         if layout is not None:
@@ -116,7 +114,7 @@ class Widget(QMainWindow):
             self.clearLayout(self.verticalLayout_5)
             self.currentBuffer.extend(self.addInputsOnIndex(inputs[currentIndex], self.verticalLayout_5))
         except Exception as e:
-            print(e)
+            self.showWarningBox(e)
 
     def addInputsOnIndex(self, widgets, parent):
         # Expecting labels for QLabels
@@ -131,7 +129,7 @@ class Widget(QMainWindow):
                 parent.addLayout(layout)
                 listOfInputs.append([layout, label, inp])
         except Exception as e:
-            print(e)
+            self.showWarningBox(e)
         return listOfInputs
 
     def submitRSA(self):
@@ -148,7 +146,7 @@ class Widget(QMainWindow):
             result.setText("Result:\n"+str(out))
             self.verticalLayout_4.addWidget(result)
         except Exception as e:
-            print(e)
+            self.showWarningBox(e)
 
     def submitXOR(self):
         funcDict = {0: "XOR.bruteforce.bruteforce",
@@ -165,31 +163,7 @@ class Widget(QMainWindow):
             result.setText("Result:\n"+str(res))
             self.verticalLayout_5.addWidget(result)
         except Exception as e:
-            print(e)
-
-        # try:
-           # currentIndex = self.XOR_Combo.currentIndex()
-           # if currentIndex == 0:
-               # inp = codecs.decode(self.currentBuffer[0][2].text(), 'hex')
-               # from XOR.bruteforce import bruteforce
-               # result = ScrollLabel()
-               # result.setText("Result:\n"+str(bruteforce(inp)))
-               # self.verticalLayout_5.addWidget(result)
-           # elif currentIndex == 1:
-               # from XOR.repeating_key import repeating_key
-               # result = ScrollLabel()
-               # opt1 = codecs.decode(self.currentBuffer[0][2].text(), 'hex')
-               # opt2 = codecs.decode(self.currentBuffer[1][2].text(), 'hex')
-               # result.setText("Result:\n"+str(repeating_key(opt1, opt2)))
-               # self.verticalLayout_5.addWidget(result)
-           # else:
-                # print("Not implemented")
-        # except Exception as e:
-           # print(e)
-           # msg = QMessageBox()
-           # msg.setWindowTitle("Error")
-           # msg.setText(str(e))
-
+            self.showWarningBox(e)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
