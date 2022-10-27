@@ -72,8 +72,9 @@ class Widget(QMainWindow):
 
     def showWarningBox(self, error):
         warningBox = QMessageBox(self)
+        warningBox.setIcon(QMessageBox.Critical)
         warningBox.setWindowTitle("Error!")
-        warningbox.setText(error)
+        warningBox.setText(str(error))
         warningBox.show()
 
     def workOnRSA(self):
