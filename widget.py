@@ -5,7 +5,7 @@ import sys
 import codecs
 import importlib
 
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea, QMainWindow, QAction
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea, QMainWindow, QAction, QComboBox, QGridLayout
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QFile
 from PyQt5 import uic
@@ -81,14 +81,14 @@ class Widget(QMainWindow):
         try:
             self.aboutLabelRSA.setParent(None)
             currentIndex = self.RSA_Combo.currentIndex()
-            inputs = {0: ["Ciphertext (in decimal)", "N (in decimal)", "E (in decimal)"],
-                      1: ["Ciphertext (in decimal)", "P (in decimal)", "Q (in decimal)", "E (in decimal)"],
-                      2: ["Ciphertext (in decimal)", "N (in decimal)", "E (in decimal)", "P (in decimal)"],
-                      3: ["Ciphertext (in decimal)", "N (in decimal)", "D (in decimal)"],
-                      4: ["C1 (in decimal)", "C2 (in decimal)", "C3 (in decimal)", "N1 (in decimal)", "N2 (in decimal)", "N3 (in decimal)"],
-                      5: ["C (in decimal)", "E (in decimal)"],
-                      6: ["C (in decimal)", "P (in decimal)", "Q (in decimal)", "DP (in decimal)", "DQ (in decimal)"],
-                      7: ["C (in decimal)", "N (in decimal)", "E (in decimal)"]
+            inputs = {0: ["Ciphertext", "N", "E"],
+                      1: ["Ciphertext", "P", "Q", "E"],
+                      2: ["Ciphertext", "N", "E", "P"],
+                      3: ["Ciphertext", "N", "D"],
+                      4: ["C1", "C2", "C3", "N1", "N2", "N3"],
+                      5: ["C", "E"],
+                      6: ["C", "P", "Q", "DP", "DQ"],
+                      7: ["C", "N", "E"]
                       }
             self.clearLayout(self.verticalLayout_4)
             self.currentBuffer.extend(self.addInputsOnIndex(inputs[currentIndex], self.verticalLayout_4))
@@ -110,8 +110,8 @@ class Widget(QMainWindow):
         try:
             self.aboutLabelXOR.setParent(None)
             currentIndex = self.XOR_Combo.currentIndex()
-            inputs = {0: ["Ciphertext (in hex)"],
-                      1: ["Ciphertext (in hex)", "Key (in hex)"]}
+            inputs = {0: ["Ciphertext"],
+                      1: ["Ciphertext", "Key"]}
             self.clearLayout(self.verticalLayout_5)
             self.currentBuffer.extend(self.addInputsOnIndex(inputs[currentIndex], self.verticalLayout_5))
         except Exception as e:
@@ -121,15 +121,20 @@ class Widget(QMainWindow):
         # Expecting labels for QLabels
         listOfInputs = []
         try:
-            for i in widgets:
-                layout = QHBoxLayout()
-                label = QLabel(i)
+            layout = QGridLayout()
+            for i in range(len(widgets)):
+                label = QLabel(widgets[i])
+                comboItems = ["Hex", "Decimal"]
+                combo = QComboBox()
+                combo.addItems(comboItems)
                 inp = QLineEdit(self)
-                layout.addWidget(label)
-                layout.addWidget(inp)
+                layout.addWidget(label, i, 0)
+                layout.addWidget(combo, i, 1)
+                layout.addWidget(inp, i, 2)
                 parent.addLayout(layout)
-                listOfInputs.append([layout, label, inp])
+                listOfInputs.append([layout, label, combo, inp])
         except Exception as e:
+            print(e)
             self.showWarningBox(e)
         return listOfInputs
 
@@ -137,7 +142,7 @@ class Widget(QMainWindow):
         funcDict = {i : f"RSA.RSA{i+1}.RSA{i+1}" for i in range(9)}
         try:
             currentIndex = self.RSA_Combo.currentIndex()
-            variable_list = [int(i[2].text())  for i in self.currentBuffer]
+            variable_list = [int(i[3].text(), 16) if i[2].currentIndex() == 0 else int(i[3].text())  for i in self.currentBuffer]
             mod_name, func_name = funcDict[currentIndex].rsplit('.',1)
             mod = importlib.import_module(mod_name)
             func = getattr(mod, func_name)
@@ -154,7 +159,7 @@ class Widget(QMainWindow):
                     1: "XOR.repeating_key.repeating_key"}
         try:
             currentIndex = self.XOR_Combo.currentIndex()
-            variable_list = [codecs.decode(i[2].text(), 'hex') for i in self.currentBuffer]
+            variable_list = [codecs.decode(i[3].text(), 'hex') if i[2].currentIndex() == 0 else int(i[3].text()) for i in self.currentBuffer]
             mod_name, func_name = funcDict[currentIndex].rsplit('.',1)
             mod = importlib.import_module(mod_name)
             func = getattr(mod, func_name)
