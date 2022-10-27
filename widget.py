@@ -38,7 +38,7 @@ class Widget(QMainWindow):
     def __init__(self, parent=None):
         # default display
         super().__init__(parent)
-        uic.loadUi('form.ui', self)
+        uic.loadUi('/home/nhegde/not-required/ZCryptZip/form.ui', self)
         aboutButton = QAction(QIcon('exit24.png'), 'About', self)
         aboutButton.setStatusTip('About application')
         aboutButton.triggered.connect(self.showAbout)

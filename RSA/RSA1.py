@@ -6,7 +6,7 @@ def factordb(n):
     f.connect()
     return f.get_factor_list()
 
-def RSA1(c, n, e)
+def RSA1(c, n, e):
     factordb = factordb(n)
     q = factordb[0]
     p = factordb[1]
