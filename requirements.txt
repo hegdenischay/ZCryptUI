@@ -6,4 +6,4 @@ SymPy
 requests
 future
 pwntools
-PyQt5
+PyQt6

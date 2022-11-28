@@ -5,10 +5,10 @@ import sys
 import codecs
 import importlib
 
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea, QMainWindow, QAction, QComboBox, QGridLayout
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QFile
-from PyQt5 import uic
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QTextEdit, QMessageBox, QVBoxLayout, QHBoxLayout, QLineEdit, QScrollArea, QMainWindow, QComboBox, QGridLayout
+from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtCore import QFile
+from PyQt6 import uic
 
 #from PyQt5.QtUiTools import QUiLoader
 class ScrollLabel(QScrollArea):
@@ -38,7 +38,7 @@ class Widget(QMainWindow):
     def __init__(self, parent=None):
         # default display
         super().__init__(parent)
-        uic.loadUi('/home/nhegde/not-required/ZCryptZip/form.ui', self)
+        uic.loadUi('form.ui', self)
         aboutButton = QAction(QIcon('exit24.png'), 'About', self)
         aboutButton.setStatusTip('About application')
         aboutButton.triggered.connect(self.showAbout)
@@ -175,4 +175,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Widget()
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
