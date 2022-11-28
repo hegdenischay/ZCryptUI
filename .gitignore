@@ -1,3 +1,6 @@
 .venv/*
 .gitignore/*
 __pycache__/*
+ZCryptUI.spec
+dist/*
+build/*
