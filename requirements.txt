@@ -7,3 +7,4 @@ requests
 future
 pwntools
 PyQt6
+pyinstaller
