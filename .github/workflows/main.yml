@@ -39,19 +39,19 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              python3 -m PyInstaller -F -w -n ZCryptUI --add-data form.ui:. widget.py utils.py RSA/* XOR/* &&
+              python3 -m PyInstaller ZCryptUI.spec &&
                 cd dist/ &&
                 zip -r9 ZCryptUI ZCryptUI.app/
             OUT_FILE_NAME: ZCryptUI.zip
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: python3 -m PyInstaller -F -w -n ZCryptUI --add-data="form.ui;." widget.py utils.py RSA\RSA1.py RSA\RSA2.py RSA\RSA3.py RSA\RSA4.py RSA\RSA5.py RSA\RSA6.py RSA\RSA7.py RSA\RSA8.py RSA\RSA_.py XOR\bruteforce.py XOR\repeating_key.py
+            CMD_BUILD: python3 -m PyInstaller ZCryptUI.spec
             OUT_FILE_NAME: ZCryptUI.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
           - os: ubuntu-latest
             TARGET: linux
-            CMD_BUILD: python3 -m PyInstaller -F -w -n ZCryptUI --add-data form.ui:. widget.py utils.py RSA/* XOR/*
+            CMD_BUILD: python3 -m PyInstaller ZCryptUI.spec
             OUT_FILE_NAME: ZCryptUI
             ASSET_MIME: application/x-elf
     steps:
